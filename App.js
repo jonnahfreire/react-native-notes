@@ -416,28 +416,3 @@ const time = () => {
 }
 
 export default App;
-
-// '#288A0B'03bc22
-// import React from 'react';
-
-// import { NavigationContainer } from '@react-navigation/native';
-// import { createStackNavigator } from '@react-navigation/stack';
-// import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-
-// import Home from './components/Home';
-// import Sobre from './components/Sobre';
-// import Perfil from './components/Perfil';
-// import { View } from 'react-native';
-
-// const Stack = createStackNavigator();
-// const Tab = createBottomTabNavigator();
-
-// function Tabs() {
-//   return (
-//     <Tab.Navigator>
-//       <Tab.Screen name="Feed" component={Home} />
-//       <Tab.Screen name="Sobre" component={Sobre} />
-//       <Tab.Screen name="Perfil" component={Perfil} />      
-//     </Tab.Navigator>
-//   )  
-// }
