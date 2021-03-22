@@ -6,7 +6,8 @@ import {
   TextInput,
   Text,
   View,
-  Keyboard
+  Keyboard,
+  Animated
 } from 'react-native';
 
 import {
@@ -22,6 +23,32 @@ export default function CreateNote(props) {
     const [text, setText]   = useState("");
     const [cardColor, setCardColor] = useState("#11bf5f");
     const [showPicker, setShowPicker] = useState(false);
+
+    const [modalOpacity] = useState(new Animated.Value(0))
+
+    Animated.timing(
+      modalOpacity,
+      {
+        toValue: 1,
+        duration: 300,
+        useNativeDriver: true
+      }
+    ).start()
+
+    const closeModal = () => {
+      Animated.timing(
+        modalOpacity,
+        {
+          toValue: 0,
+          duration: 300,
+          useNativeDriver: true
+        }
+      ).start()
+      setTimeout(()=>{
+        props.show?.()
+      }, 200)
+    }
+
 
     const [alert, setAlert] = useState({
       "alert": false, 
@@ -48,7 +75,8 @@ export default function CreateNote(props) {
           text,
           cardColor
         )
-        props.show?.()
+        closeModal()
+        // props.show?.()
       }
     }
 
@@ -65,40 +93,66 @@ export default function CreateNote(props) {
         })
 
       }else{
-        props.show?.()
+        closeModal()
+        // props.show?.()
       }
     }
 
     return(
-      <View style={styles.newNoteContainerModal}>
+      <Animated.View style={{
+        backgroundColor: 'rgba(0, 0, 0,.7)',
+        position: 'absolute',
+        top: 67,
+        display: 'flex',
+        justifyContent: 'flex-start',
+        alignItems: 'center',
+        height: '100%',
+        width: '100%',
+        zIndex: 999,
+        opacity: modalOpacity
+      }}>
+        
         {alert.alert &&
+          
           <View style={styles.alertContainer}>
+            
             <View style={styles.alert}>
+              
               <Text style={styles.alertText}>
                 {alert.msg}
               </Text>
+
               {!alert.msg.includes("alterações")  && 
+                
                 <TouchableOpacity style={styles.alertBtn}>
+                 
                   <Text
                     style={styles.alertBtnText}
                     onPress={()=>setAlert(false)}
                   >
                     OK
                   </Text>
+                
                 </TouchableOpacity>
               }
+
               {alert.msg.includes("alterações") &&
+               
                 <View style={styles.alertBtnYN}>
+                  
                   <TouchableOpacity style={styles.alertBtnY}>
+                   
                     <Text
                       style={styles.alertBtnTextY}
                       onPress={()=>{saveNote()}}
                     >
                       Sim
                     </Text>
+                  
                   </TouchableOpacity>
 
                   <TouchableOpacity style={styles.alertBtnN}>
+                   
                     <Text
                       style={styles.alertBtnTextN}
                       onPress={()=>{setAlert(false); props.show?.()}}
@@ -106,11 +160,16 @@ export default function CreateNote(props) {
                       Não
                     </Text>
                   </TouchableOpacity>
+               
                 </View>
               }
+            
             </View>
+          
           </View>
+        
         }
+        
         <View style={{
           position: 'absolute',
           backgroundColor: cardColor !== '#11bf5f'? cardColor: "#515151",
@@ -120,6 +179,7 @@ export default function CreateNote(props) {
           borderRadius: 15
         }}>
           <View style={styles.headerContainer}>
+            
             <TextInput
               style={styles.newNoteTitle}
               autoCorrect={false}
@@ -128,6 +188,7 @@ export default function CreateNote(props) {
               value={title}
               onChangeText={(value)=>setTitle(value)}
             />
+            
             <TouchableOpacity
               style={styles.btnCloseNewNote}
               onPress={()=>{verifyEdited()}}
@@ -139,7 +200,9 @@ export default function CreateNote(props) {
               />
             </TouchableOpacity>
           </View>
+          
           <View style={styles.newNoteTextContainer}>
+            
             <TextInput
               style={styles.newNoteText}
               autoCorrect={false}
@@ -150,9 +213,11 @@ export default function CreateNote(props) {
               placeholderTextColor="#FFF"
               onChangeText={(value)=>setText(value)}
             />
+          
           </View>
           
           <View style={styles.newNoteBtnContainer}>
+            
             <TouchableOpacity
               style={styles.newNoteBtnColorPalette}
               onPress={()=> {
@@ -166,6 +231,7 @@ export default function CreateNote(props) {
                 color="white"
               />
             </TouchableOpacity>
+           
             <TouchableOpacity
               style={styles.newNoteBtnSave}
               onPress={()=>{
@@ -179,30 +245,23 @@ export default function CreateNote(props) {
                 color="white"
               />
             </TouchableOpacity>
+          
           </View>
+       
         </View>
+        
         {showPicker &&
           <ColorPic 
             show={setShowPicker} 
             setColor={setCardColor}
           />
         }
-      </View>
+
+      </Animated.View>
     )
 }
 
 const styles = StyleSheet.create({
-  newNoteContainerModal: {
-    backgroundColor: 'rgba(0, 0, 0,.7)',
-    position: 'absolute',
-    top: 67,
-    display: 'flex',
-    justifyContent: 'flex-start',
-    alignItems: 'center',
-    height: '100%',
-    width: '100%',
-    zIndex: 999
-  },
   alertContainer: {
     position: 'absolute',
     width: '100%',

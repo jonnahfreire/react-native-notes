@@ -1,16 +1,47 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import { ColorPicker } from 'react-native-color-picker';
 import Slider from '@react-native-community/slider';
 
-import { TouchableOpacity, View, Text, Dimensions } from 'react-native';
+import { TouchableOpacity,
+    Text,
+    Dimensions,
+    Animated
+} from 'react-native';
 
 export default function ColorPic(props){
+
+    const [pickerModalOpacity] = useState(new Animated.Value(0))
+   
+    Animated.timing(
+        pickerModalOpacity,
+        {
+            toValue: 1,
+            duration: 200,
+            useNativeDriver: true
+        }
+    ).start()
+  
+    const closePickerModal = () => {
+        Animated.timing(
+            pickerModalOpacity,
+            {
+                toValue: 0,
+                duration: 200,
+                useNativeDriver: true
+            }
+        ).start()
+
+        setTimeout(()=>{
+            props.show?.(false)
+        }, 100)
+    }
+    
     const pickerTextSize = Dimensions.get('window').width === 360
     ? 18 : 20
 
     return (
-        <View style={{
+        <Animated.View style={{
             position: 'absolute',
             display: 'flex',
             justifyContent: 'flex-end',
@@ -18,7 +49,8 @@ export default function ColorPic(props){
             flex: 1,
             width: '100%',
             height: '90%',
-            backgroundColor: 'rgba(0, 0, 0, .3)'
+            backgroundColor: 'rgba(0, 0, 0, .3)',
+            opacity: pickerModalOpacity
         }}> 
             <Text style={{
                 position: 'relative',
@@ -44,7 +76,7 @@ export default function ColorPic(props){
                 width: '100%',
                 height: '100%',
             }}
-                onPress={()=> props?.show(false)}
+                onPress={()=> closePickerModal()}
             />
             <ColorPicker
                 onColorSelected={color => props?.setColor(color)}
@@ -61,6 +93,6 @@ export default function ColorPic(props){
                     borderBottomRightRadius: 10,
                 }}
             />
-        </View>
+        </Animated.View>
     )
 }

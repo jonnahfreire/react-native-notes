@@ -7,7 +7,7 @@ export const storeNote = async (value) => {
     } catch (e) {
       Alert.alert(e)
     }
-  }
+}
 
 export const getNotes = async () => {
   try {

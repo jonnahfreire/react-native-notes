@@ -7,6 +7,7 @@ import {
   Text,
   View,
   Keyboard,
+  Animated
 } from 'react-native';
 
 import {
@@ -22,6 +23,31 @@ export default function EditNote(props) {
     const [ text, setText ]   = useState(props.data.note);
     const [ bgColor, setBgColor ] = useState(props.data.cardColor);
     const [ showPicker, setShowPicker ] = useState(false);
+    
+    const [modalOpacity] = useState(new Animated.Value(0))
+
+    Animated.timing(
+      modalOpacity,
+      {
+        toValue: 1,
+        duration: 300,
+        useNativeDriver: true
+      }
+    ).start()
+
+    const closeModal = () => {
+       Animated.timing(
+        modalOpacity,
+        {
+          toValue: 0,
+          duration: 300,
+          useNativeDriver: true
+        }
+      ).start()
+      setTimeout(()=>{
+        props.show?.()
+      }, 200)
+    }
 
     const [ alert, setAlert ] = useState({
       "alert": false,
@@ -47,7 +73,7 @@ export default function EditNote(props) {
           true,
           props.data.id
         )
-        props.show?.()
+        closeModal()
       }
     }
 
@@ -63,12 +89,23 @@ export default function EditNote(props) {
         })
 
       }else{
-        props.show?.()
+        closeModal()
       }
     }
 
     return(
-      <View style={styles.editNoteContainerModal}>
+      <Animated.View style={{
+        backgroundColor: 'rgba(0, 0, 0, .7)',
+        position: 'absolute',
+        top: 67,
+        display: 'flex',
+        justifyContent: 'flex-start',
+        alignItems: 'center',
+        height: '100%',
+        width: '100%',
+        zIndex: 999,
+        opacity: modalOpacity
+      }}>
         {alert.alert &&
           <View style={styles.alertContainer}>
             <View style={styles.alert}>
@@ -181,22 +218,11 @@ export default function EditNote(props) {
         {showPicker &&
           <ColorPic show={setShowPicker} setColor={setBgColor}/>
         }
-      </View>
+      </Animated.View>
     )
 }
 
 const styles = StyleSheet.create({
-  editNoteContainerModal: {
-    backgroundColor: 'rgba(0, 0, 0, .7)',
-    position: 'absolute',
-    top: 67,
-    display: 'flex',
-    justifyContent: 'flex-start',
-    alignItems: 'center',
-    height: '100%',
-    width: '100%',
-    zIndex: 999
-  },
   alertContainer: {
     position: 'absolute',
     width: '100%',
