@@ -76,7 +76,6 @@ export default function CreateNote(props) {
           cardColor
         )
         closeModal()
-        // props.show?.()
       }
     }
 
@@ -94,7 +93,6 @@ export default function CreateNote(props) {
 
       }else{
         closeModal()
-        // props.show?.()
       }
     }
 
