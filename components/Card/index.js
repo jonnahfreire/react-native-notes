@@ -79,19 +79,6 @@ export default function Card(props) {
                     {props?.time}
                 </Text>
 
-                {/* <TouchableOpacity
-                    style={{marginRight: -170}}
-                    onPress={() => {
-                        props.editCardColor(props.id)
-                    }}
-                >
-                    <MaterialCommunityIcons
-                        name="palette-outline"
-                        size={30}
-                        color="white"
-                    />
-                </TouchableOpacity> */}
-
                 <TouchableOpacity 
                     style={{
                         marginRight: editIconMargin
